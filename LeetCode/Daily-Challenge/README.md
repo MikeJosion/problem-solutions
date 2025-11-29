@@ -1,3 +1,3 @@
-# LeetCode Daily Challenges
+# Daily Challenge TOC
 
-这里存放每日一题题解。 
+- [Leetcode Daily challenge-1015](Leetcode%20Daily%20challenge-1015.md)
