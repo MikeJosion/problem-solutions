@@ -1,63 +1,38 @@
-{"id":"50321","variant":"standard","title":"notion-sync.yml 自动同步脚本"}
 name: Sync Notion to GitHub
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 */6 * * *"   # 每 6 小时同步一次，可自行修改
+    - cron: "*/30 * * * *"
 
 jobs:
   sync:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
-          node-version: 18
+          python-version: "3.10"
 
       - name: Install dependencies
-        run: |
-          npm init -y
-          npm install @notionhq/client notion-to-md
+        run: pip install requests python-slugify
 
-      - name: Sync from Notion
+      - name: Run sync script
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
-          NOTION_PAGE_ID: "2b66e1d9068980d7b967d9b7d2cbd891"
+          NOTION_PAGE_ID: ${{ secrets.NOTION_PAGE_ID }}
+        run: python notion_sync.py
+
+      - name: Commit changes
         run: |
-          node << 'EOF'
-          const { Client } = require("@notionhq/client");
-          const { NotionToMarkdown } = require("notion-to-md");
-          const fs = require("fs");
-          const path = require("path");
-
-          const notion = new Client({ auth: process.env.NOTION_TOKEN });
-          const n2m = new NotionToMarkdown({ notionClient: notion });
-
-          async function run() {
-            const pageId = process.env.NOTION_PAGE_ID;
-            const md = await n2m.pageToMarkdown(pageId);
-            const mdString = n2m.toMarkdownString(md);
-
-            const today = new Date().toISOString().slice(0, 10);
-            const filename = `${today}-leetcode.md`;
-            const outputPath = path.join(process.cwd(), filename);
-
-            fs.writeFileSync(outputPath, mdString);
-            console.log("Generated:", filename);
-          }
-
-          run();
-          EOF
-
-      - name: Commit and Push Changes
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.email "action@github.com"
+          git config user.name "GitHub Action"
           git add .
-          git commit -m "Sync Notion page" || echo "No changes to commit"
-          git push
+          git commit -m "Sync Notion" || echo "Nothing to commit"
+
+      - name: Push changes
+        run: git push
