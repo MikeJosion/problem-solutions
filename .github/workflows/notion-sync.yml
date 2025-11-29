@@ -3,7 +3,7 @@ name: Sync Notion to GitHub
 on:
   workflow_dispatch:
   schedule:
-    - cron: "*/30 * * * *"  # 每30分钟自动同步
+    - cron: "0 */12 * * *"  # 每30分钟自动同步
 
 jobs:
   sync:
