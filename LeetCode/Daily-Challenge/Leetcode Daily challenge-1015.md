@@ -5,3 +5,36 @@
 注意： n 可能不符合 64 位带符号整数。
 > 💡 **Note:**
 > 📌核心:东西比格子多 → 至少有一个格子里会放至少两个东西
+
+我们会得到：
+也就是说：
+你做了 (k) 次运算，但结果只能落在 (k-1) 个不同的值里。
+你把 (k) 个余数（鸽子）
+放到 (k-1) 个可能取值（鸽巢） 中。
+只要鸽子比鸽巢多，就一定至少有一个鸽巢装了两只鸽子。
+也就是说：
+一定会发生 余数重复。
+假设：
+那么之后的余数序列会完全重复：
+也就是说：
+序列
+会重复成为
+循环只会重复这些值。
+
+
+```java
+class Solution {
+    public int smallestRepunitDivByK(int k) {
+        // 特判：k 为偶数或 5 的倍数，无解
+        if (k % 2 == 0 || k % 5 == 0)  return -1;
+        
+        int remainder = 0;
+        for (int len = 1; len <= k; len++) {
+            remainder = (remainder * 10 + 1) % k;
+            if (remainder == 0) return len;
+        }
+        return -1; 
+    }
+}
+```
+
