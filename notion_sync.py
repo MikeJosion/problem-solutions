@@ -22,7 +22,7 @@ if not NOTION_API_KEY or not PAGE_ID:
 notion = Client(auth=NOTION_API_KEY)
 
 # ------------------------
-# CSDN 发布功能 (保持不变)
+# CSDN 发布功能
 # ------------------------
 def push_to_csdn(title, content, category="LeetCode"):
     if not CSDN_COOKIE:
@@ -127,9 +127,19 @@ def block_to_markdown(block):
         content = f"\n<details><summary>{text}</summary>\n\n"
     elif b_type == "quote":
         content = f"> {text}\n"
+        
+    # ✅ 修复点：安全获取 Icon
     elif b_type == "callout":
-        icon = block["callout"].get("icon", {}).get("emoji", "💡")
+        callout_data = block.get("callout", {})
+        icon_data = callout_data.get("icon")
+        
+        # 默认图标
+        icon = "💡"
+        if icon_data and "emoji" in icon_data:
+            icon = icon_data["emoji"]
+        
         content = f"> {icon} **{text}**\n>\n"
+
     elif b_type == "code":
         lang = block["code"].get("language", "text")
         code_text = richtext_to_plain(block["code"]["rich_text"])
@@ -154,19 +164,13 @@ def block_to_markdown(block):
     return content
 
 # ------------------------
-# 🗑️ 新增：自动清理功能
+# 自动清理功能
 # ------------------------
 def clean_orphan_files(active_problem_numbers):
-    """
-    删除 GitHub 中存在，但 Notion 中已不存在（或已改名）的文件
-    """
     if not os.path.exists(OUTPUT_DIR):
         return
 
-    # 获取目录下所有 md 文件
     existing_files = [f for f in os.listdir(OUTPUT_DIR) if f.endswith(".md") and f != "README.md"]
-    
-    # 期望的文件名格式: Leetcode Daily challenge-{number}.md
     pattern = re.compile(r"Leetcode Daily challenge-(\d+)\.md")
 
     print("-" * 30)
@@ -176,11 +180,10 @@ def clean_orphan_files(active_problem_numbers):
         match = pattern.match(filename)
         if match:
             file_num = match.group(1)
-            # 如果文件编号不在本次 Notion 解析到的编号列表中 -> 删除它
             if file_num not in active_problem_numbers:
                 file_path = os.path.join(OUTPUT_DIR, filename)
                 os.remove(file_path)
-                print(f"🗑️ [删除] 过期文件: {filename} (Notion 中已删除或重命名)")
+                print(f"🗑️ [删除] 过期文件: {filename}")
 
 # ------------------------
 # 主逻辑
@@ -200,14 +203,12 @@ def parse_notion_page():
     current_content = []
     all_files = []
 
-    # 解析 Block
     for block in all_root_blocks:
         b_type = block["type"]
         text = ""
         if "rich_text" in block.get(b_type, {}):
             text = richtext_to_plain(block[b_type]["rich_text"])
 
-        # 识别新题目：一级标题
         if b_type == "heading_1":
             if current_title:
                 all_files.append((current_title, "".join(current_content)))
@@ -216,16 +217,12 @@ def parse_notion_page():
             current_content = []
             print(f"  👉 识别题目: {current_title}")
         else:
-            # 如果没有一级标题前的普通文本，可能会被归到上一个题目，或者被丢弃（如果它是第一个）
-            # 这里的逻辑是：如果没有 current_title，且遇到内容，则暂时放入 current_content
-            # 等遇到下一个标题时，这些内容会属于"上一段"（如果有的话）
             md = block_to_markdown(block)
             current_content.append(md)
 
     if current_title:
         all_files.append((current_title, "".join(current_content)))
 
-    # 用于记录本次所有有效的题号
     active_problem_numbers = set()
 
     print("-" * 30)
@@ -234,9 +231,7 @@ def parse_notion_page():
         problem_number = match.group(1) if match else None
         
         if problem_number:
-            # 记录有效题号
             active_problem_numbers.add(problem_number)
-
             file_path = os.path.join(OUTPUT_DIR, f"Leetcode Daily challenge-{problem_number}.md")
             os.makedirs(os.path.dirname(file_path), exist_ok=True)
             
@@ -264,12 +259,10 @@ def parse_notion_page():
         else:
             print(f"⚠️ 跳过（无题号）: {title}")
 
-    # --- 执行清理 ---
-    # 只有当成功解析到至少一个题目时，才敢执行清理，防止 Notion API 挂了导致误删所有文件
     if active_problem_numbers:
         clean_orphan_files(active_problem_numbers)
     else:
-        print("⚠️ 本次未解析到任何有效题目，跳过清理步骤（防止误删）。")
+        print("⚠️ 本次未解析到任何有效题目，跳过清理步骤。")
 
 if __name__ == "__main__":
     parse_notion_page()
