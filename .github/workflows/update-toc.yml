@@ -1,0 +1,33 @@
+name: Update Daily Challenge TOC
+
+on:
+push:
+paths:
+- "LeetCode/Daily-Challenge/*.md"
+- "scripts/generate_daily_toc.py"
+
+jobs:
+build:
+runs-on: ubuntu-latest
+
+```
+steps:
+  - name: Checkout repository
+    uses: actions/checkout@v3
+
+  - name: Set up Python
+    uses: actions/setup-python@v4
+    with:
+      python-version: "3.11"
+
+  - name: Run TOC generator
+    run: python scripts/generate_daily_toc.py
+
+  - name: Commit and push changes
+    run: |
+      git config --global user.email "github-actions[bot]@users.noreply.github.com"
+      git config --global user.name "github-actions[bot]"
+      git add .
+      git commit -m "Auto-update Daily Challenge TOC" || echo "No changes to commit"
+      git push || echo "No changes"
+```
