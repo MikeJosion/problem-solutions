@@ -3,7 +3,7 @@ name: Sync Notion to GitHub
 on:
   workflow_dispatch:
   schedule:
-    - cron: "*/30 * * * *"
+    - cron: "*/30 * * * *"  # 每30分钟自动同步
 
 jobs:
   sync:
@@ -16,12 +16,12 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.10"
+          python-version: '3.10'
 
       - name: Install dependencies
         run: pip install requests python-slugify
 
-      - name: Run sync script
+      - name: Run Notion Sync
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
           NOTION_PAGE_ID: ${{ secrets.NOTION_PAGE_ID }}
