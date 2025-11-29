@@ -15,17 +15,19 @@
 
 <details><summary>**2. 余数为什么能代表整个数字,不用真的构造 1、11、111？**</summary>
 
-
-$$
-\begin{aligned}
-\text{resid}_{new} &= n_{new} \bmod k \\
-&= (n_{old} \times 10 + 1) \bmod k \\
-&= ((n_{old} \bmod k) \times 10 + 1) \bmod k \\
-&= (\text{resid}_{old} \times 10 + 1) \bmod k
-\end{aligned}
-
-$$
-
+> 💡 ****
+>
+> 
+> $$
+> \begin{aligned}
+> \text{resid}_{new} &= n_{new} \bmod k \\
+> &= (n_{old} \times 10 + 1) \bmod k \\
+> &= ((n_{old} \bmod k) \times 10 + 1) \bmod k \\
+> &= (\text{resid}_{old} \times 10 + 1) \bmod k
+> \end{aligned}
+> 
+> $$
+> 
 </details>
 
 <details><summary>**3. 为什么余数重复意味着永远不会出 0？**</summary>
