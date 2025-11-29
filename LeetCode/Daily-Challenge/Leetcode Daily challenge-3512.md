@@ -1,4 +1,4 @@
-# **[3512. 使数组和能被 K 整除的最少操作次数](https://leetcode.cn/problems/minimum-operations-to-make-array-sum-divisible-by-k/)**
+# [3512. 使数组和能被 K 整除的最少操作次数](https://leetcode.cn/problems/minimum-operations-to-make-array-sum-divisible-by-k/)
 
 
 给你一个整数数组 `nums` 和一个整数 `k`。你可以执行以下操作任意次：

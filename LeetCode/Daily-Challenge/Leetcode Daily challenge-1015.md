@@ -1,4 +1,4 @@
-# **[1015. 可被 K 整除的最小整数](https://leetcode.cn/problems/smallest-integer-divisible-by-k/)****(11.25)**
+# [1015. 可被 K 整除的最小整数](https://leetcode.cn/problems/smallest-integer-divisible-by-k/)**(11.25)**
 
 给定正整数 `k` ，你需要找出可以被 `k` 整除的、仅包含数字 `1` 的最 **小** 正整数 `n` 的长度。
 返回 `n` 的长度。如果不存在这样的 `n` ，就返回-1。
