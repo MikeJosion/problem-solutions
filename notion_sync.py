@@ -27,7 +27,6 @@ notion = Client(auth=NOTION_API_KEY)
 def push_to_csdn(title, content, category="LeetCode"):
     if not CSDN_COOKIE:
         return
-
     url = "https://blog-console-api.csdn.net/v1/mdeditor/saveArticle"
     headers = {
         "User-Agent": "Mozilla/5.0",
@@ -45,13 +44,11 @@ def push_to_csdn(title, content, category="LeetCode"):
         response = requests.post(url, headers=headers, json=data)
         if response.json().get("code") == 200:
             print(f"   [CSDN] 🎉 成功发布: {title}")
-        else:
-            print(f"   [CSDN] ❌ 发布失败: {response.json().get('msg')}")
     except Exception:
         pass
 
 # ------------------------
-# Notion 解析逻辑 (核心)
+# Notion 解析逻辑 (核心修复)
 # ------------------------
 
 def richtext_to_plain(rich_text_list):
@@ -61,19 +58,24 @@ def richtext_to_plain(rich_text_list):
     for x in rich_text_list:
         try:
             plain = x.get("plain_text", "")
-            # ✅ 增强：处理行内公式 (Inline Equation)
+            
+            # ✅ 重点修复：行内公式 (Inline Equation)
+            # 如果 Notion 认为是公式，必须用 $ 包裹，并取 expression
             if x.get("type") == "equation":
                 expr = x.get("equation", {}).get("expression", plain)
                 plain = f"${expr}$"
+                
             # 处理链接
             elif x.get("href"):
                 plain = f"[{plain}]({x.get('href')})"
             
-            # 处理格式 (加粗/代码)
-            annotations = x.get("annotations", {})
-            if annotations.get("code"): plain = f"`{plain}`"
-            elif annotations.get("bold"): plain = f"**{plain}**"
-            elif annotations.get("italic"): plain = f"*{plain}*"
+            # 处理格式 (加粗/代码/斜体)
+            # 注意：如果已经是公式，就不再加粗，防止破坏 LaTeX 语法
+            else:
+                annotations = x.get("annotations", {})
+                if annotations.get("code"): plain = f"`{plain}`"
+                elif annotations.get("bold"): plain = f"**{plain}**"
+                elif annotations.get("italic"): plain = f"*{plain}*"
                 
             text_content += plain
         except Exception:
@@ -81,7 +83,7 @@ def richtext_to_plain(rich_text_list):
     return text_content
 
 def get_block_children_recursive(block_id, depth=0):
-    if depth > 10: # 允许10层嵌套，足够处理折叠列表
+    if depth > 10: 
         return []
     results = []
     cursor = None
@@ -91,7 +93,6 @@ def get_block_children_recursive(block_id, depth=0):
             response = notion.blocks.children.list(safe_id, start_cursor=cursor)
             blocks = response.get("results", [])
             for block in blocks:
-                # 递归抓取 (处理折叠列表、Callout内部内容)
                 if block.get("has_children", False):
                     block["children_blocks"] = get_block_children_recursive(block["id"], depth + 1)
                 results.append(block)
@@ -135,7 +136,7 @@ def block_to_markdown(block):
             checked = "x" if block["to_do"].get("checked") else " "
             content = f"- [{checked}] {text}\n"
             
-        # 4. 折叠列表 (Toggle)
+        # 4. 折叠列表
         elif b_type == "toggle": 
             content = f"\n<details><summary>{text}</summary>\n\n"
             
@@ -143,12 +144,11 @@ def block_to_markdown(block):
         elif b_type == "quote":
             content = f"> {text}\n"
             
-        # 6. Callout (⚠️ 之前报错的地方已修复)
+        # 6. Callout (修复空图标崩溃)
         elif b_type == "callout":
             callout_data = block.get("callout", {})
-            # 安全获取 icon，防止 None 报错
             icon_data = callout_data.get("icon")
-            icon = "💡" # 默认图标
+            icon = "💡"
             if icon_data and isinstance(icon_data, dict) and "emoji" in icon_data:
                 icon = icon_data["emoji"]
             content = f"> {icon} **{text}**\n>\n"
@@ -160,6 +160,7 @@ def block_to_markdown(block):
             content = f"\n```{lang}\n{code_text}\n```\n"
             
         # 8. 独立公式块 (Block Equation)
+        # ✅ 修复：确保公式块前后有换行，保证 GitHub 正确渲染
         elif b_type == "equation":
             expression = block.get("equation", {}).get("expression", "")
             content = f"\n$$\n{expression}\n$$\n"
@@ -167,21 +168,22 @@ def block_to_markdown(block):
         # 9. 分割线
         elif b_type == "divider":
             content = "\n---\n"
-            
+        
         # 10. 图片
         elif b_type == "image":
             url = block.get("image", {}).get("file", {}).get("url") or block.get("image", {}).get("external", {}).get("url")
             if url:
                 content = f"![image]({url})\n"
 
-        # 递归处理子内容 (Folded content / Callout content)
+        # 递归处理子内容
         if "children_blocks" in block:
             for child in block["children_blocks"]:
                 child_md = block_to_markdown(child)
-                # 缩进优化
+                # 缩进/引用处理，确保嵌套格式正确
                 if b_type in ["bulleted_list_item", "numbered_list_item"]:
                     child_md = "  " + child_md.replace("\n", "\n  ")
                 elif b_type == "callout":
+                    # Callout 里的内容全部加 >
                     child_md = "> " + child_md.replace("\n", "\n> ")
                 content += child_md
                 
@@ -195,17 +197,15 @@ def block_to_markdown(block):
         return "" 
 
 # ------------------------
-# 自动清理功能 (核心修复)
+# 自动清理功能 (脚本成功运行到底才会触发)
 # ------------------------
 def clean_orphan_files(active_problem_numbers):
     if not os.path.exists(OUTPUT_DIR):
         return
 
-    # 正则：匹配 "Leetcode Daily challenge-数字.md"
     pattern = re.compile(r"Leetcode Daily challenge-(\d+)\.md")
-    
     print("-" * 30)
-    print("🧹 正在清理旧文件...")
+    print("🧹 正在检查需清理的旧文件...")
     
     files = os.listdir(OUTPUT_DIR)
     deleted_count = 0
@@ -214,17 +214,17 @@ def clean_orphan_files(active_problem_numbers):
         match = pattern.match(filename)
         if match:
             file_num = match.group(1)
-            # 如果文件号不在本次解析到的 Notion 列表里 -> 删！
+            # 如果文件编号不在本次解析到的 Notion 列表里 -> 删
             if file_num not in active_problem_numbers:
                 try:
                     os.remove(os.path.join(OUTPUT_DIR, filename))
-                    print(f"🗑️ [已删除] 旧文件: {filename}")
+                    print(f"🗑️ [已删除] 旧文件: {filename} (Notion 中已归档或合并)")
                     deleted_count += 1
                 except Exception as e:
                     print(f"❌ 删除失败 {filename}: {e}")
     
     if deleted_count == 0:
-        print("✨ 没有需要清理的文件。")
+        print("✨ 目录干净，无需清理。")
 
 # ------------------------
 # 主逻辑
@@ -232,7 +232,6 @@ def clean_orphan_files(active_problem_numbers):
 def parse_notion_page():
     print(f"🔗 正在连接 Notion... (ID: {PAGE_ID[-4:]})")
     
-    # 1. 递归抓取所有 Block
     all_root_blocks = get_block_children_recursive(PAGE_ID)
     
     if not all_root_blocks:
@@ -245,9 +244,8 @@ def parse_notion_page():
     current_content = []
     all_files = []
 
-    # 2. 解析内容
     for block in all_root_blocks:
-        text = block_to_markdown(block) # 解析内容
+        text = block_to_markdown(block) 
         
         b_type = block["type"]
         plain_title = ""
@@ -266,16 +264,13 @@ def parse_notion_page():
             # 其他内容归入当前题目
             current_content.append(text)
 
-    # 保存最后一题
     if current_title:
         all_files.append((current_title, "".join(current_content)))
 
-    # 3. 写入文件并记录有效题号
     active_problem_numbers = set()
 
     print("-" * 30)
     for title, content in all_files:
-        # 提取题号 (兼容你的格式 1015. xxx)
         match = re.search(r"(\d{1,5})", title) 
         problem_number = match.group(1) if match else None
         
@@ -305,7 +300,7 @@ def parse_notion_page():
         else:
             print(f"⚠️ 跳过无题号内容: {title[:10]}...")
 
-    # 4. 执行清理 (这一步现在一定能执行到了！)
+    # 执行清理
     if active_problem_numbers:
         clean_orphan_files(active_problem_numbers)
     else:
