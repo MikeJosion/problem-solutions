@@ -14,15 +14,15 @@ struct ListNode {
 typedef struct ListNode *Node;
 
 // 初始化：head 是一个指向头节点的指针
+//链表栈，就是永远只对 head->next（第一个节点）进行操作的链表。
 void initStackLink(Node head) {
     head->next = NULL;
 }
 
-// 入栈 (头插法)
+//（入栈） = 头插法（永远插在 head 后面）
 bool pushStackLink(Node head, E element) {
-    Node node = malloc(sizeof(struct ListNode)); // 创建新节点
-    if (node == NULL) return false; // 内存不足
-
+    Node node = malloc(sizeof(struct ListNode));
+    if (node == NULL) return false;
     node->element = element;
     node->next = head->next; // 新节点指向原来的第一个节点
     head->next = node;       // 头节点指向新节点
@@ -34,7 +34,7 @@ bool isEmptyLink(Node head) {
     return head->next == NULL;
 }
 
-// 出栈
+// Pop（出栈） = 头删法（永远删掉 head 后面的第一个）
 E popStackLink(Node head) {
     // 【关键修复】必须先判断是否为空！
     if (isEmptyLink(head)) {
