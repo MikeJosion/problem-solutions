@@ -90,10 +90,8 @@ BiTree deQueue(LinkQueue *q) {
 // 用户输入格式示例：ABD##E##C## (#表示空)
 BiTree createTree() {
     char ch;
-    // 技巧：scanf(" %c") 引号里的第一个空格是为了跳过上一轮留下的回车符或空格
-    // 如果不加这个空格，读取会出错
     scanf(" %c", &ch);
-
+    //这样可以避免输入的时候存在的空格或者换行符等问题
     if (ch == '#') {
         return NULL; // 遇到井号，表示这里是空的
     } else {
@@ -111,8 +109,8 @@ BiTree createTree() {
     }
 }
 
-// 销毁树 (防止内存泄漏)
-// 必须用后序逻辑：先销毁孩子，最后销毁自己
+// 销毁树 (防止内存泄漏) 手动调用
+// 必须用后序逻辑：先销毁孩子，最后销毁自己(左右孩子顺序无所谓,主要是先杀孩子再杀自己)
 void destroyTree(BiTree root) {
     if (root == NULL) return;
     destroyTree(root->left);
@@ -151,13 +149,14 @@ void postOrder(BiTree root) {
 // ==========================================
 
 // --- 非递归前序 (根 -> 左 -> 右) ---
+//灵魂:前序遍历是拿到节点立刻打印,打印完成再进栈,出栈是为了找它的右孩子
 void preOrderIterative(BiTree root) {
     if (root == NULL) return;
 
-    LinkStack s;
-    initStack(&s);
+    LinkStack s; //创建一个栈的控制指针 s
+    initStack(&s); //初始化为空栈
 
-    BiTree curr = root;
+    BiTree curr = root; //定义一个当前所在的游标 (Cursor)，并把它初始化在根节点的位置
 
     while (curr != NULL || !isStackEmpty(s)) {
         // 1. 一路向左，边走边打印，并把节点存入栈(为了等会儿回来找右孩子)
@@ -174,8 +173,11 @@ void preOrderIterative(BiTree root) {
         }
     }
 }
+//疑问点:当左边走到底之后右边的元素是怎么写进栈的又是怎么打印的
+//当 curr 变成了右孩子之后，外层的大循环 (while) 会再次开始
 
 // --- 非递归中序 (左 -> 根 -> 右) ---
+//灵魂:中序是拿到节点进栈,直到一路向左走到底出栈的时候再打印
 void inOrderIterative(BiTree root) {
     if (root == NULL) return;
 
@@ -201,6 +203,8 @@ void inOrderIterative(BiTree root) {
 }
 
 // --- 非递归后序 (左 -> 右 -> 根) --- 这是最难的！
+//灵魂:先拿到元素进栈,当左边一路走到底时,回看栈顶这个没有左孩子”（或者左孩子刚走完）的节点本身
+//如果它有右孩子，而且没去过,不出栈也不打印;如果它没有右孩子，或者我们刚刚就是从右孩子那边回来的出栈 -> 打印
 void postOrderIterative(BiTree root) {
     if (root == NULL) return;
 
@@ -235,7 +239,7 @@ void postOrderIterative(BiTree root) {
 }
 
 // ==========================================
-// 5. 层序遍历 (Level Order) - 使用队列
+// 5. 层序遍历 (Level Order) - 使用队列(先进先出)
 // ==========================================
 void levelOrder(BiTree root) {
     if (root == NULL) return;
