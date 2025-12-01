@@ -35,7 +35,7 @@ bool offerQueueLink(LinkedQueue queue, E element) {
     Node node = malloc(sizeof(struct Node));
     if (node == NULL)return false;
     node->element = element;
-    //标记了“队尾”的结束 重点
+    //标记了“队尾”的结束 重点脏内存：你申请到的格子里，留着上一个程序用剩下的垃圾数据。乱指路：如果不手动把 next 设为 NULL，这些垃圾数据就会被当成有效地址。必撞车：程序顺着这些“假地址”跑下去，绝对会崩溃。
     node->next = NULL;
     //把新节点挂在当前队尾后面
     queue->rear->next = node;

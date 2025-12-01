@@ -48,6 +48,7 @@ bool isEmpty(ArrayQueue queue) {
 }
 
 E pollQueue(ArrayQueue queue) {
+    //% queue->capacity;每次到末尾之后传送到下标为0的位置
     queue->front = (queue->front + 1) % queue->capacity;
     return queue->array[queue->front];
 }
