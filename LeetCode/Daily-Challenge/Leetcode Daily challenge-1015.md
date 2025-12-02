@@ -25,6 +25,7 @@
 > &= ((n_{old} \bmod k) \times 10 + 1) \bmod k \\
 > &= (\text{resid}_{old} \times 10 + 1) \bmod k
 > \end{aligned}
+> 
 > $$
 > 
 </details>
