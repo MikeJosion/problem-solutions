@@ -1,5 +1,5 @@
 #include "BST.h"
-
+//左小右大 包括子树里面的所有元素都要满足这个条件
 int main() {
     // 解决乱码
     system("chcp 65001");
