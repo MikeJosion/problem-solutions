@@ -226,7 +226,7 @@ void postOrderIterative(BiTree root) {
 
         // 2. 左边没了，看看栈顶（先不弹）;取栈顶元素的值，赋值给 top
         BiTree top = peekStack(s);
-        //peekStack 的作用就是： “大哥（栈顶节点），你先在里面坐会儿，别出来。我先看看你的右孩子去没去过，再决定你是留下来加班，还是下班回家。
+        //peekStack 的作用就是： “栈顶节点，先在里面坐会儿，别出来。先看看它的右孩子去没去过，再决定你是留下来加班，还是下班回家。
 
         // 3. 判断：如果有右孩子，且右孩子没被访问过 -> 转战右边
         if (top->right != NULL && top->right != prev) {

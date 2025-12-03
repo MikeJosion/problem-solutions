@@ -74,4 +74,4 @@ void postOrderIterative(BiTree root); // 难点
 // --- 层序遍历 (Level Order) ---
 void levelOrder(BiTree root);
 
-#endif // BINARYTREE_H
+#endif // BINARYTREE_H  //结尾
