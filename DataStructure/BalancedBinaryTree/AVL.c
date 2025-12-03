@@ -17,15 +17,15 @@ int max(int a, int b) {
 }
 
 // 计算平衡因子: 左子树高度 - 右子树高度
-// 结果 > 1 : 左边太重了 (L型)
-// 结果 < -1: 右边太重了 (R型)
+// 结果 > 1 : 左边太高了 (L型)  需要右旋来降低高度
+// 结果 < -1: 右边太高了 (R型)  需要左旋来降低高度
 int getBalanceFactor(Node node) {
     if (node == NULL) return 0;
     return getHeight(node->left) - getHeight(node->right);
 }
 
 // 更新高度 (每次变动后都要调用)
-// 自己的高度 = 左右孩子最高的那个 + 1
+// 整个树的高度 = 左右孩子最高的那个 + 1
 void updateHeight(Node node) {
     node->height = max(getHeight(node->left), getHeight(node->right)) + 1;
 }
@@ -36,34 +36,39 @@ void updateHeight(Node node) {
 
 // --- 右旋 (Right Rotation) ---
 // 适用场景: 左左 (LL) 失衡
+//LL型需要根节点的左边比右边高2,然后左孩子的左边比右边高1/0
 // 动作: 把左孩子(y)提上来当爹，自己(root)降下去当右孩子
+//灵魂:左孩上位当大哥，老爹降级做右弟，右孙过继给老爹当左孩子
 Node rightRotate(Node root) {
-    Node newRoot = root->left;   // 这里的 newRoot 就是原来的左孩子
-    Node temp = newRoot->right;  // 暂存 newRoot 的右孩子(也就是冲突的那块肉)
+    //先将左孩子拿住
+    Node newRoot = root->left;
+    //左孩子的右孩子会冲突,所以还需要一个变量拿住右孩子
+    Node temp = newRoot->right;
+    //1.旋转(交换父子关系)
+    newRoot->right = root; //将newRoot的右孩子变成原来的爹(root)
+    root->left = temp;  //原来的爹(root)接管我原来的右孩子
 
-    // 1. 旋转 (互换父子关系)
-    newRoot->right = root;       // 我(newRoot)的右孩子变成原来的爹(root)
-    root->left = temp;           // 原来的爹(root)接管我原本的右孩子
-
-    // 2. 更新高度 (注意顺序: 先更子，后更父)
+    //2.更新高度(注意顺序:先更子,后更父)
+    //为什么先更新子再更新父
+    //更新原则：自底向上 ,永远先更新处于下层的节点，再更新处于上层的节点。因为上层节点的高度数据 依赖于 下层节点
     updateHeight(root);
     updateHeight(newRoot);
 
-    return newRoot; // 返回新的根
+    return newRoot;//返回新的根
 }
 
 // --- 左旋 (Left Rotation) ---
 // 适用场景: 右右 (RR) 失衡
+//RR型需要根节点的右边比左边高2,然后右孩子的右边比左边高1/0
 // 动作: 把右孩子(y)提上来当爹，自己(root)降下去当左孩子
+//灵魂:右孩子上位当大哥,老爹降级做左弟,左孙过继给老爹当右孩子
 Node leftRotate(Node root) {
-    Node newRoot = root->right;  // 这里的 newRoot 就是原来的右孩子
-    Node temp = newRoot->left;   // 暂存 newRoot 的左孩子
-
-    // 1. 旋转
-    newRoot->left = root;        // 我(newRoot)的左孩子变成原来的爹(root)
-    root->right = temp;          // 原来的爹(root)接管我原本的左孩子
-
-    // 2. 更新高度
+    Node newRoot = root->right; //要操作的右孩子
+    Node temp = newRoot->left; //左孙
+    //1.旋转
+    newRoot->left = root;
+    root->right = temp;
+    //更新高度,由底自上
     updateHeight(root);
     updateHeight(newRoot);
 
