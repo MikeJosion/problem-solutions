@@ -7,27 +7,31 @@
 //注意插入必须要走到死胡同
 // ==========================================
 Node insertBST(Node root, E val) {
-    // 1. 找到了空位，就在这里安家
+    //如果存在空位,就地安家
     if (root == NULL) {
-        Node newNode = (Node)malloc(sizeof(TreeNode));
+        Node newNode = (Node) malloc(sizeof(TreeNode));
+        if (newNode == NULL)return NULL;
+        //注意点:这里应该返回NULl而不是false,类型不对,需要返回的类型应该是指针,语义不通,地址为空是NULL,逻辑为假是false
         newNode->element = val;
         newNode->left = NULL;
         newNode->right = NULL;
         return newNode;
     }
 
-    // 2. 比根小，往左走
+    //如果比根小往左走
     if (val < root->element) {
         root->left = insertBST(root->left, val);
     }
-    // 3. 比根大，往右走
+    //如果比根大往右走
     else if (val > root->element) {
         root->right = insertBST(root->right, val);
     }
-    // 4. 如果相等，BST通常不存重复值，直接返回
-
-    return root; // 返回当前节点，保持链条不断
+    //如果相等,BST通常不存在重复值,直接返回
+    return root;
 }
+
+//注意点:写完要返回节点,保持链条不断
+
 
 // ==========================================
 // 2. 查找 (Search) - 迭代版
@@ -35,32 +39,32 @@ Node insertBST(Node root, E val) {
 // ==========================================
 Node searchBST(Node root, E val) {
     while (root != NULL) {
-        if (val < root->element) {
-            root = root->left;  // 目标比当前小，去左边找
-        } else if (val > root->element) {
-            root = root->right; // 目标比当前大，去右边找
+        if (val > root->element) {
+            root = root->right;
+        } else if (val < root->element) {
+            root = root->left;
         } else {
-            return root;        // 找到了！(val == root->element)
+            return root;
         }
     }
-    return NULL; // 走到死胡同也没找到
+    return NULL; //走到死胡同也没找到
 }
 
 // ==========================================
 // 3. 极值查找 (Min / Max)
 // ==========================================
+//最小值一定在最左边的子树
 Node findMin(Node root) {
-    if (root == NULL) return NULL;
-    // 最小的一定在最左边
+    if (root == NULL)return NULL;
     while (root->left != NULL) {
         root = root->left;
     }
     return root;
 }
 
+//最大值一定子最右边的子树
 Node findMax(Node root) {
     if (root == NULL) return NULL;
-    // 最大的一定在最右边
     while (root->right != NULL) {
         root = root->right;
     }
@@ -78,11 +82,10 @@ Node findMax(Node root) {
 Node deleteBST(Node root, E val) {
     if (root == NULL) return NULL;
 
-    // --- 第一步: 先找到要删的节点 ---
+    // --- 第一步: 先找到要删的节点 ---比节点小往左走,比节点大往右走
     if (val < root->element) {
         root->left = deleteBST(root->left, val);
-    }
-    else if (val > root->element) {
+    } else if (val > root->element) {
         root->right = deleteBST(root->right, val);
     }
     // --- 第二步: 找到了 (val == root->element)，准备动手 ---
@@ -93,9 +96,8 @@ Node deleteBST(Node root, E val) {
             Node temp = root->right; // 让右孩子接班 (可能是NULL)
             free(root);
             return temp;
-        }
-        else if (root->right == NULL) {
-            Node temp = root->left;  // 让左孩子接班
+        } else if (root->right == NULL) {
+            Node temp = root->left; // 让左孩子接班
             free(root);
             return temp;
         }
@@ -108,10 +110,12 @@ Node deleteBST(Node root, E val) {
         root->element = temp->element;
         //关于右子树最小的节点:一定是“没有左孩子”的，但不一定是叶子节点（它可能有右孩子）
         // 2. 去右子树里，把那个继承人的旧肉身删掉
+        //再次调用deleteBST()此时的节点一定满足情况A
         root->right = deleteBST(root->right, temp->element);
     }
     return root;
 }
+
 //注意点:最后不可以直接free那个右子树最小节点,因为它可能有右孩子,所以要重复deleteBST()这样就是单节点,孩子会上去接班
 
 
