@@ -14,7 +14,7 @@ static bool compare(ElementType a, ElementType b, HeapType type) {
         return a < b;
     }
 }
-
+//把两个的变量值交换
 static void swap(ElementType *a, ElementType *b) {
     ElementType temp = *a;
     *a = *b;
@@ -23,12 +23,12 @@ static void swap(ElementType *a, ElementType *b) {
 
 // 上浮 (Sift Up): 插入新元素后，如果不满足规则，往上爬
 static void siftUp(Heap* heap, int index) {
-    while (index > 0) {
-        int parent = (index - 1) / 2;
-
+    while (index > 0) {//只要这个插入的元素没爬上顶部就会比较
+        int parent = (index - 1) / 2; //找到直属的上司
         // 核心口诀: 孩子比父亲"强"，就要上位
         // "强"的定义由 compare 函数决定 (最大堆就是更大，最小堆就是更小)
         if (compare(heap->data[index], heap->data[parent], heap->type)) {
+            //heap的类型会在调用createHeap()的时候要求手动声明
             swap(&heap->data[index], &heap->data[parent]);
             index = parent; // 继续往上查
         } else {
@@ -40,18 +40,23 @@ static void siftUp(Heap* heap, int index) {
 // 下沉 (Sift Down): 删除堆顶后，把末尾元素放顶端，往下沉
 static void siftDown(Heap* heap, int index) {
     int half = heap->size / 2; // 优化: 只有非叶子节点才需要下沉
+    //在数组表示的二叉树中，后一半的元素全是叶子节点（没有孩子的节点）。
+    //下标 < size / 2 的节点：有孩子（非叶子节点）。
+    //下标 >= size / 2 的节点：全是叶子（没有孩子）
 
     while (index < half) {
-        int left = 2 * index + 1;
+        //只要当前节点还有孩子，就继续检查
+        int left = 2 * index + 1;  //找到这个节点的左孩子
         int right = 2 * index + 2;
         int target = left; // 假设左孩子是我们要交换的目标
 
         // 如果右孩子存在，且右孩子比左孩子更"强"
         if (right < heap->size && compare(heap->data[right], heap->data[left], heap->type)) {
             target = right;
+            //注意点:判断有没有右孩子不可以直接heap->data[right],如果没有右孩子会崩溃
         }
 
-        // 如果现在的节点比目标孩子还要"强" (或者一样)，说明位置对了，不用沉了
+        // 如果当前的节点比目标孩子还要"强" (或者一样)，说明位置对了，不用沉了
         if (compare(heap->data[index], heap->data[target], heap->type)) {
             break;
         }
