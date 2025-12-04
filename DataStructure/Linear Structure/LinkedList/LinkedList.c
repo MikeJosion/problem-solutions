@@ -25,7 +25,7 @@ bool insertNode(Node *node, E value, int index) {
     temp->value = value;
     temp->next = node->next;
     node->next = temp;
-    return true;
+    return true ;
 }
 
 bool removeNode(Node *node, int index) {
