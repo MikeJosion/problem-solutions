@@ -78,6 +78,7 @@ Node leftRotate(Node root) {
 // ==========================================
 // 3. 插入 (Insert) - 带自动平衡
 // ==========================================
+//简单理解就是BST插入加上更新高度和旋转判断
 Node insertAVL(Node root, E val) {
     // --- 第一步: 标准 BST 插入 (和昨天写的一样) ---
     if (root == NULL) {
@@ -86,6 +87,7 @@ Node insertAVL(Node root, E val) {
         newNode->left = NULL;
         newNode->right = NULL;
         newNode->height = 1; // 新节点高度为 1
+        //刚插入一个新节点，它是叶子节点（也就是树的最底层）,根据高度计算自底向上
         return newNode;
     }
 
@@ -102,23 +104,29 @@ Node insertAVL(Node root, E val) {
 
     // --- 第三步: 检查是否失衡，并“对症下药” (4种情况) ---
     int balance = getBalanceFactor(root);
-
+    //balance > 1：说明左边太高了（左子树比右子树高超过 1）  LL或者LR
+    //balance < -1：说明右边太高了（右子树比左子树高超过 1） RR或者RL
     // 情况 A: 左左 (LL) -> 左边太重，且插入在左孩子的左边
     // 对策: 右旋一次
     if (balance > 1 && val < root->left->element) {
+        //val < root->left->element 新值比左孩子小，说明插在左孩子的左边 (基于二叉搜索树的原理:比我小的，往左走；比我大的，往右走)
         return rightRotate(root);
     }
 
     // 情况 B: 右右 (RR) -> 右边太重，且插入在右孩子的右边
     // 对策: 左旋一次
     if (balance < -1 && val > root->right->element) {
+        //同理val > root->right->element插在右孩子的右边
         return leftRotate(root);
     }
 
     // 情况 C: 左右 (LR) -> 左边太重，但插入在左孩子的右边 (拐弯了)
     // 对策: 先把左孩子左旋(变成LL)，再把自己右旋
+    //先左旋:把左孩子和右孙互换位置,但是左孩子要去左孙的位置
     if (balance > 1 && val > root->left->element) {
-        root->left = leftRotate(root->left); // 先微调左孩子
+        root->left = leftRotate(root->left); // 先左旋
+        //疑问点:为什么root->left = leftRotate(root->left);可以实现先左旋的功能
+        //细节去看leftRotate()的代码
         return rightRotate(root);            // 再整体右旋
     }
 
