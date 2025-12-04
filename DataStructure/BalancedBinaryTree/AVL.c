@@ -8,9 +8,10 @@
 //报错的本质:“Segmentation Fault” (段错误),
 //试图去访问一个系统不允许你访问的内存地址（0x0000000），操作系统为了保护电脑，直接把你的程序杀掉
 int getHeight(Node node) {
-    if (node == NULL) return 0;
+    if (node == NULL)return 0;
     return node->height;
 }
+
 //计算节点的高度,节点的高由最高的那个决定
 int max(int a, int b) {
     return a > b ? a : b;
@@ -20,7 +21,7 @@ int max(int a, int b) {
 // 结果 > 1 : 左边太高了 (L型)  需要右旋来降低高度
 // 结果 < -1: 右边太高了 (R型)  需要左旋来降低高度
 int getBalanceFactor(Node node) {
-    if (node == NULL) return 0;
+    if (node == NULL)return 0;
     return getHeight(node->left) - getHeight(node->right);
 }
 
@@ -38,15 +39,16 @@ void updateHeight(Node node) {
 // 适用场景: 左左 (LL) 失衡
 //LL型需要根节点的左边比右边高2,然后左孩子的左边比右边高1/0
 // 动作: 把左孩子(y)提上来当爹，自己(root)降下去当右孩子
-//灵魂:左孩上位当大哥，老爹降级做右弟，右孙过继给老爹当左孩子
+//灵魂:左孩上位当大哥，老爹降级做右弟(这一步就是把爹赋值给左孩子的右孩子)右孙过继给老爹当左孩子
 Node rightRotate(Node root) {
+    //总体思路:找变量拿住左孩子和右孙,旋转(灵魂),更新高度,返回新根
     //先将左孩子拿住
     Node newRoot = root->left;
-    //左孩子的右孩子会冲突,所以还需要一个变量拿住右孩子
+    //左孩子的右孩子会冲突,所以还需要一个变量拿住右孙
     Node temp = newRoot->right;
     //1.旋转(交换父子关系)
     newRoot->right = root; //将newRoot的右孩子变成原来的爹(root)
-    root->left = temp;  //原来的爹(root)接管我原来的右孩子
+    root->left = temp; //原来的爹(root)接管我原来的右孩子
 
     //2.更新高度(注意顺序:先更子,后更父)
     //为什么先更新子再更新父
@@ -54,7 +56,7 @@ Node rightRotate(Node root) {
     updateHeight(root);
     updateHeight(newRoot);
 
-    return newRoot;//返回新的根
+    return newRoot; //返回新的根
 }
 
 // --- 左旋 (Left Rotation) ---
@@ -63,15 +65,12 @@ Node rightRotate(Node root) {
 // 动作: 把右孩子(y)提上来当爹，自己(root)降下去当左孩子
 //灵魂:右孩子上位当大哥,老爹降级做左弟,左孙过继给老爹当右孩子
 Node leftRotate(Node root) {
-    Node newRoot = root->right; //要操作的右孩子
-    Node temp = newRoot->left; //左孙
-    //1.旋转
+    Node newRoot = root->right;
+    Node temp = newRoot->left;
     newRoot->left = root;
     root->right = temp;
-    //更新高度,由底自上
     updateHeight(root);
     updateHeight(newRoot);
-
     return newRoot;
 }
 
@@ -82,22 +81,23 @@ Node leftRotate(Node root) {
 Node insertAVL(Node root, E val) {
     // --- 第一步: 标准 BST 插入 (和昨天写的一样) ---
     if (root == NULL) {
-        Node newNode = (Node)malloc(sizeof(AVLNode));
+        Node newNode = (Node) malloc(sizeof(AVLNode));
         newNode->element = val;
-        newNode->left = NULL;
-        newNode->right = NULL;
-        newNode->height = 1; // 新节点高度为 1
-        //刚插入一个新节点，它是叶子节点（也就是树的最底层）,根据高度计算自底向上
+        newNode->right = newNode->left = NULL;
+        newNode->height = 1;
         return newNode;
     }
 
+    //小于往左走,大于往右走
     if (val < root->element) {
         root->left = insertAVL(root->left, val);
     } else if (val > root->element) {
         root->right = insertAVL(root->right, val);
     } else {
-        return root; // 不允许重复值
+        return root;
+        //不可以返回NULL,会切断后面的树,return root就是会忽略这次的插入,但是会继续完成售后(更新身高,检查平衡因子)
     }
+
 
     // --- 第二步: 更新当前节点的高度 ---
     updateHeight(root);
@@ -127,14 +127,14 @@ Node insertAVL(Node root, E val) {
         root->left = leftRotate(root->left); // 先左旋
         //疑问点:为什么root->left = leftRotate(root->left);可以实现先左旋的功能
         //细节去看leftRotate()的代码
-        return rightRotate(root);            // 再整体右旋
+        return rightRotate(root); // 再整体右旋
     }
 
     // 情况 D: 右左 (RL) -> 右边太重，但插入在右孩子的左边 (拐弯了)
     // 对策: 先把右孩子右旋(变成RR)，再把自己左旋
     if (balance < -1 && val < root->right->element) {
         root->right = rightRotate(root->right); // 先微调右孩子
-        return leftRotate(root);                // 再整体左旋
+        return leftRotate(root); // 再整体左旋
     }
 
     // 如果没失衡，直接返回自己
