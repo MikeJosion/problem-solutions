@@ -21,11 +21,11 @@ bool initQueue(ArrayQueue queue) {
 
 //Front 永远指着“虚的”（空的）。 Rear 永远指着“实的”（刚填进去的数据）。
 bool offerQueue(ArrayQueue queue, E element) {
-    //判断是否满
+    //判断是否满了
     if ((queue->rear + 1) % queue->capacity == queue->front)return false;
-    //挪位：移动队尾指针
+    //移动队尾指针
     queue->rear = (queue->rear + 1) % queue->capacity;
-    //填数据
+    //传值
     queue->array[queue->rear] = element;
     return true;
 }
