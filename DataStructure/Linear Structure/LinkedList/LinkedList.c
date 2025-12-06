@@ -20,12 +20,14 @@ bool insertNode(Node *node, E value, int index) {
         if (node->next == NULL)return false;
         node = node->next;
     }
+    //此时循环结束指向的是要插入位置的前面一个元素
     Node *temp = malloc(sizeof(Node));
     if (temp == NULL)return false;
     temp->value = value;
+    //画图即可理解
     temp->next = node->next;
     node->next = temp;
-    return true ;
+    return true;
 }
 
 bool removeNode(Node *node, int index) {
@@ -35,7 +37,11 @@ bool removeNode(Node *node, int index) {
         node = node->next;
     }
     if (node->next == NULL)return false;
+    //注意点:node->next == NULL防止你试图去删除一个“不存在的节点”，从而导致程序崩溃
     Node *temp = node->next;
+    //怎么区分Node temp与Node *temp
+    //Node temp:只想要一个临时的、局部的数据容器，不需要它长期存在，也不需要把它挂到链表上时
+    //Node *temp:当你想操作现有的节点（查找、删除、修改、移动指针）。想 malloc 一个新节点（malloc 返回的是地址）
     node->next = temp->next;
     free(temp);
     return true;
@@ -51,6 +57,7 @@ void printNode(const Node *node) {
 
 int sizeNode(const Node *node) {
     if (node == NULL)return 0;
+    //一般false是操作失败就是存在错误,0是数量为0
     int count = 0;
     while (node != NULL) {
         count++;
