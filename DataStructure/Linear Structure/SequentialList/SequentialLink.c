@@ -11,45 +11,40 @@ typedef struct List {
 } List;
 
 bool initList(List *list) {
-    // 建议初始容量不用给太大，测试扩容效果
     list->array = malloc(sizeof(E) * 10);
-    if (list->array == NULL) return false;
+    //malloc 不会把整块地皮搬过来给你，它只会返回这块地皮的起始地址（第一个字节的编号）
+    if (list->array == NULL)return false;
+    //list是看这个结构体是不是空的,而list->array是检查内存是不是分配成功的
     list->capacity = 10;
     list->size = 0;
     return true;
 }
 
+//先判断下标,再看要不要扩容,最后插入
 bool insertList(List *list, E value, int index) {
-    if (index < 0 || index > list->size) return false;
-
-    // 扩容逻辑优化
+    if (index < 0 || index > list->size)return false;
     if (list->size == list->capacity) {
-        int newCapacity = list->capacity == 0 ? 10 : list->capacity * 2;
+        int newCapacity = list->capacity * 2;
         E *temp = realloc(list->array, sizeof(E) * newCapacity);
         if (temp == NULL) return false;
-
         list->array = temp;
-        list->capacity = newCapacity; // 成功后再改 capacity
+        list->capacity = newCapacity;
     }
-
-    // 【修正1】循环逻辑：从最后一位往后搬
     for (int i = list->size - 1; i >= index; i--) {
+        //注意:当size=0时,不满足i >= index直接会跳出循环
         list->array[i + 1] = list->array[i];
     }
-
     list->array[index] = value;
     list->size++;
     return true;
 }
 
+//注意:插入与删除永远只操作： array[i] 和 array[i+1],这样可以避免下标越界的问题
 bool removeList(List *list, int index) {
-    if (index < 0 || index >= list->size) return false;
-
-    // 【修正2】循环条件：防止读取越界
+    if (index < 0 || index >= list->size)return false;
     for (int i = index; i < list->size - 1; i++) {
         list->array[i] = list->array[i + 1];
     }
-
     list->size--;
     return true;
 }
