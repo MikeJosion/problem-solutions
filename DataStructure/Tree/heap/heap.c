@@ -67,13 +67,14 @@ static void siftDown(Heap* heap, int index) {
     }
 }
 
-// --- 接口实现 ---
+// --- 创建堆---
 
 Heap* createHeap(int capacity, HeapType type) {
     Heap* heap = (Heap*)malloc(sizeof(Heap));
     if (!heap) return NULL;
 
     heap->data = (ElementType*)malloc(sizeof(ElementType) * capacity);
+    //heap->data在使用时当作数组
     heap->size = 0;
     heap->capacity = capacity;
     heap->type = type;

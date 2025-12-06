@@ -22,10 +22,11 @@ void initStackLink(Node head) {
 //（入栈） = 头插法（永远插在 head 后面）
 bool pushStackLink(Node head, E element) {
     Node node = malloc(sizeof(struct ListNode));
-    if (node == NULL) return false;
+    if (node == NULL)return false;
     node->element = element;
-    node->next = head->next; // 新节点指向原来的第一个节点
-    head->next = node;       // 头节点指向新节点
+    //画图理解最快
+    node->next = head->next; //把之前在头节点后面的地址给新插入的
+    head->next = node;
     return true;
 }
 
@@ -36,24 +37,22 @@ bool isEmptyLink(Node head) {
 
 // Pop（出栈） = 头删法（永远删掉 head 后面的第一个）
 E popStackLink(Node head) {
-    // 【关键修复】必须先判断是否为空！
     if (isEmptyLink(head)) {
-        printf("Error: Stack is empty!\n");
-        return -1; // 返回错误码
+        printf("Stack is empty");
+        return -1;
     }
-
-    Node top = head->next;       // top 指向栈顶节点
-    E e = top->element;          // 取出数据
-    head->next = top->next;      // 头节点跳过栈顶，指向下一个
-
-    free(top);                   // 【重要】释放内存
+    //画图理解最快
+    Node temp = head->next;
+    E e = temp->element;
+    temp->next = head->next;
+    free(temp);
     return e;
 }
 
 // 打印栈
 void printStackLink(Node head) {
     printf("Stack: [Top] -> ");
-    Node curr = head->next; // 从头节点的下一个开始遍历
+    Node curr = head->next; // 从头节点的下一个开始遍历(探险家)
     while (curr) {
         printf("%d -> ", curr->element);
         curr = curr->next;

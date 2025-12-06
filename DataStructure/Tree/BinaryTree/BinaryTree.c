@@ -117,6 +117,7 @@ void destroyTree(BiTree root) {
     destroyTree(root->left);
     destroyTree(root->right);
     free(root);
+    //这里计算机会自动回溯,在释放完最底下的节点是,会回溯到上一个的节点
 }
 
 // --- 递归遍历实现 (非常简洁) ---

@@ -5,40 +5,41 @@
 typedef int E;
 
 struct Stack {
-    E * array;
+    E *array;
     int capacity;
-    int top;   //这里使用top来表示当前的栈顶位置，存的是栈顶元素的下标
+    int top; //这里使用top来表示当前的栈顶位置，存的是栈顶元素的下标
 };
 
-typedef struct Stack * ArrayStack;  //起个别名
+typedef struct Stack *ArrayStack; //起个别名
 
 bool initStack(ArrayStack stack) {
+    stack->array = malloc(sizeof(E) * 10);
+    if (stack->array == NULL)return false;
     stack->capacity = 10;
     stack->top = -1;
-    stack->array = malloc(sizeof(E)*10);
-    if (stack->array == NULL)return false;
     return true;
 }
 
+//灵魂:先判断是容量,再插入
 bool pushStack(ArrayStack stack, E element) {
     //top是下标top+1是元素的个数
-    if (stack->top + 1 == stack->capacity) {
+    if (stack->capacity == stack->top + 1) {
         int newCapacity = stack->capacity * 2;
-        // 【关键修改】使用 realloc，它会扩容并保留原数据！
-        E * newArray = realloc(stack->array, sizeof(E) * newCapacity);
-        if (newArray == NULL) return false; // 扩容失败
-        stack->array = newArray;
-        stack->capacity = newCapacity; // 更新容量
+        E *temp = realloc(stack->array, sizeof(E) * newCapacity);
+        //temp 拿到的是这块扩容后的内存区域的起始地址
+        if (temp == NULL)return false;
+        stack->array = temp;
+        stack->capacity = newCapacity;
     }
-
     stack->top++;
+    //应该先top++,否则当插入第一个元素时,top=-1会报错
     stack->array[stack->top] = element;
     return true;
 }
 
 void printStack(ArrayStack stack) {
-    for (int i = 0;i<=stack->top;i++) {
-        printf("%d ",stack->array[i]);
+    for (int i = 0; i <= stack->top; i++) {
+        printf("%d ", stack->array[i]);
     }
     printf("\n");
 }
@@ -48,14 +49,13 @@ bool isEmpty(ArrayStack stack) {
 }
 
 E popStack(ArrayStack stack) {
-    // 【关键修改】必须先检查是否为空
+    //必须先检查是否为空
     if (isEmpty(stack)) {
         printf("错误：栈已空，无法弹栈\n");
         return -1; // 返回一个错误值
     }
     return stack->array[stack->top--];
 }
-
 
 
 int main(void) {
