@@ -150,7 +150,6 @@ void postOrder(BiTree root) {
 // 4. 非递归遍历 (Iterative Traversal) - 重点/难点
 //与递归类似,根就是打印操作,左就是调用函数左节点走,右就是调用函数右节点走
 //小循环:都是先压栈,再看操作的第一个,根在前要先printf("%c", curr->data);然后结尾都是左:curr = curr->left;
-//
 // ==========================================
 
 // --- 非递归前序 (根 -> 左 -> 右) ---
@@ -227,7 +226,7 @@ void postOrderIterative(BiTree root) {
 
         // 2. 左边没了，看看栈顶（先不弹）;取栈顶元素的值，赋值给 top
         BiTree top = peekStack(s);
-        //peekStack 的作用就是： “栈顶节点，先在里面坐会儿，别出来。先看看它的右孩子去没去过，再决定你是留下来加班，还是下班回家。
+        //peekStack :取当前的栈顶元素
 
         // 3. 判断：如果有右孩子，且右孩子没被访问过 -> 转战右边
         if (top->right != NULL && top->right != prev) {
@@ -238,8 +237,10 @@ void postOrderIterative(BiTree root) {
         else {
             printf("%c ", top->data); // 【后序】：最后打印
             popStack(&s); // 真的弹出了
-            prev = top; // 给父节点看,如果 prev == 我的右孩子：父节点就知可以打印了
-            curr = NULL; // 关键！重置为空，防止下一次循环又往左钻
+            prev = top; //把刚刚出栈的元素给prev 给父节点看,如果 prev == 我的右孩子：父节点就知可以打印了
+            curr = NULL;
+            //当我们执行到 else 分支（即打印并弹出节点）时，意味着以当前节点为根的这棵子树已经彻底遍历完了。
+            //后序遍历最后是打印根节点,所以当根节点被打印之后说明这个根节点的子树已经全部打印了
         }
     }
 }
