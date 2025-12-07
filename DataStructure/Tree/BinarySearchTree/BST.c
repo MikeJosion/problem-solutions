@@ -96,6 +96,8 @@ Node deleteBST(Node root, E val) {
             Node temp = root->right; // 让右孩子接班 (可能是NULL)
             free(root);
             return temp;
+            //疑问点:后面free(r)之后就会断开,然后return t,t是怎么和这个树连接的
+            //这里的return是和上面函数里的deleteBST联合,将返回的值赋给了root的子树,实现后面树的连接
         } else if (root->right == NULL) {
             Node temp = root->left; // 让左孩子接班
             free(root);
@@ -103,7 +105,7 @@ Node deleteBST(Node root, E val) {
         }
 
         // 情况 B: 儿女双全 (左右都有)
-        // 策略: 找右子树里最小的节点 (Successor) 来顶替位置
+        // 策略: 找被删除的树的右子树里最小的节点 (Successor) 来顶替位置
         Node temp = findMin(root->right);
 
         // 1. 把右子树最小的节点的值直接给要删除的节点
