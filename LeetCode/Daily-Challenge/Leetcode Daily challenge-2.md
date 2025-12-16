@@ -112,6 +112,7 @@ struct ListNode* addTwoNumbers(struct ListNode* l1, struct ListNode* l2) {
     // 先将链表的头尾定义为空,这个就是拿来记录答案的链表
     struct ListNode *head = NULL, *tail = NULL;
     int carry = 0, sum = 0, cur = 0;
+    //判断可以直接写l1 || l2
     while (l1 != NULL || l2 != NULL) {
         int a = l1 ? l1->val : 0;
         int b = l2 ? l2->val : 0;
