@@ -1,6 +1,7 @@
 # [19. 删除链表的倒数第 N 个结点](https://leetcode.cn/problems/remove-nth-node-from-end-of-list/)**(12.18)**
 
 给你一个链表，删除链表的倒数第 `n`* *个结点，并且返回链表的头结点。
+
 **示例 1：**
 ![image](https://assets.leetcode.com/uploads/2020/10/03/remove_ex1.jpg)
 
@@ -137,7 +138,7 @@ typedef struct Stack {
 > > **作用**：让 `Phoneptr` 等价于 `struct Smartphone*`。
 > > **好处**：定义指针时只需写 `Phoneptr ptr;`。它把“星号 ”隐藏在了别名里。
 > > > 
-## 💻代码s
+## 💻代码
 
 ```c
 /**
@@ -187,3 +188,4 @@ struct ListNode* removeNthFromEnd(struct ListNode* head, int n) {
     return ans;
 }
 ```
+
