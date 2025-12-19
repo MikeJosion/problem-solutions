@@ -1,3 +1,3 @@
-# LeetCode By Topic
+# LeetCode — Code Only
 
-按题目类别分类的题解。
+不需要总结
