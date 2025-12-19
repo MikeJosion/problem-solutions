@@ -150,42 +150,56 @@ typedef struct Stack {
  */
 // 使用栈的先进后出可以直接把倒序的给打印出来
 typedef struct Stack {
-    // 为什么不可以定义两个next,不都是要指向下一个地址吗
     struct ListNode* val;
     struct Stack* next;
-} StackNode;
+} Node;
 struct ListNode* removeNthFromEnd(struct ListNode* head, int n) {
-    // 申请内存
+    // 如果要删除的是head节点之后的元素,链表的后半段会丢失,所以需要一个办法来使头节点和普通的节点都可以正常使用
+    // 如果要删除的节点是头节点本身，dummy
+    // 作为它的前驱，仍然可以把新的头节点正确连接并返回。
     struct ListNode* dummy = malloc(sizeof(struct ListNode));
     if (dummy == NULL)
         return NULL;
-    // 申请完之后要初始化
     dummy->val = 0;
     dummy->next = head;
-    // top 始终指向最后进入栈的元素
-    StackNode* top = NULL;
-    struct ListNode* curr = dummy;
-    // 需要把链表的元素存进栈里面
-    while (curr) {
-        StackNode* temp = malloc(sizeof(StackNode));
-        if (temp == NULL)
-            return NULL;
-        temp->val = curr; // 把整个节点的地址给temp保存
+    //使用我们定义的栈把链表放进去
+    Node * top = NULL;
+    struct ListNode * curr = dummy;
+    while(curr){
+        //申请内存写错:Node* temp = malloc(sizeof(Node*));
+        //疑问:我申请的是结构指针对吧,所以Node*不应该是一个整体吗
+        //你申请的是“Node 指向的结构体内存”，不是“Node 这个指针本身的内存”。*
+        Node* temp = malloc(sizeof(Node));
+        if(temp == NULL)return NULL;
         temp->next = top;
         top = temp;
+        temp->val = curr;
         curr = curr->next;
     }
-    // 从最后面开始出栈保留最后一个出栈的元素
-    for (int i = 0; i < n; i++) {
-        StackNode* tmp = top; // 1. 抓稳要删的
-        top = top->next;      // 2. 移到下一个
-        free(tmp);
+    //使用出栈来找
+    for(int i = 0;i<n;i++){
+        Node* temp = top;
+        top = top->next;
+        free(temp);
     }
-    struct ListNode* prev = top->val;
-    prev->next = prev->next->next;
-    struct ListNode* ans = dummy->next;
-    free(dummy);
-    return ans;
+    //使用链表删除的方法来删除指定的节点,现在是在要删除的前一个节点
+    struct ListNode * prev = top->val;//要删除的前一个
+    //还需要清空栈
+    while (top) {
+    Node* temp = top;
+    top = top->next;
+    free(temp);
 }
+    struct ListNode * freenode = prev->next;
+    prev->next = freenode->next;
+    free(freenode);
+    struct ListNode* result = dummy->next;
+    free(dummy);
+    return result;
+}
+
+// 思路:是因为他是要删除倒数的元素,利用栈的后进先出特性，在出栈 N 次后，栈顶元素即为倒数第 N 个节点的前驱节点,又因为我的栈存的是链表节点的地址和下一个栈的地址,所以我在循环遍历到要删除节点的前一个节点,再利用链表删除节点的方法完成删除。,再把中间值保存的和前面的节点连接就可以返回正确答案
+
 ```
+
 
