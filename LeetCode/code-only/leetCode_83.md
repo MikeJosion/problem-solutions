@@ -4,7 +4,7 @@
 
 ## 示例
 
-![alt text](image-1.png)
+![示意图](https://assets.leetcode.com/uploads/2021/01/04/list2.jpg)
 
 ## 实现代码
 
