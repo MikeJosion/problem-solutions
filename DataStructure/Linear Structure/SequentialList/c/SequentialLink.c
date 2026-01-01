@@ -1,20 +1,8 @@
-#include <stdio.h>
-#include <stdbool.h>
-#include <stdlib.h>
-
-typedef int E;
-
-typedef struct List {
-    E *array;
-    int capacity;
-    int size;
-} List;
-
+#include "SequentialLink.h"
+//初始化
 bool initList(List *list) {
     list->array = malloc(sizeof(E) * 10);
-    //malloc 不会把整块地皮搬过来给你，它只会返回这块地皮的起始地址（第一个字节的编号）
     if (list->array == NULL)return false;
-    //list是看这个结构体是不是空的,而list->array是检查内存是不是分配成功的
     list->capacity = 10;
     list->size = 0;
     return true;
@@ -23,16 +11,14 @@ bool initList(List *list) {
 //先判断下标,再看要不要扩容,最后插入
 bool insertList(List *list, E value, int index) {
     if (index < 0 || index > list->size)return false;
-    if (list->size == list->capacity) {
+    if (list->capacity == list->size) {
+        //需要申请内存,是申请数组
         int newCapacity = list->capacity * 2;
-        E *temp = realloc(list->array, sizeof(E) * newCapacity);
-        if (temp == NULL) return false;
-        list->array = temp;
+        E *newArrary = realloc(list->array, sizeof(E) * newCapacity);
+        //检查内存是否申请成功的判断条件不可是list->array==NULL,因为realloc申请失败原内存地址还保留
+        if (newArrary == NULL)return false;
+        list->array = newArrary;
         list->capacity = newCapacity;
-    }
-    for (int i = list->size - 1; i >= index; i--) {
-        //注意:当size=0时,不满足i >= index直接会跳出循环
-        list->array[i + 1] = list->array[i];
     }
     list->array[index] = value;
     list->size++;
@@ -88,54 +74,4 @@ void destroyList(List *list) {
     }
     list->size = 0;
     list->capacity = 0;
-}
-
-int main(void) {
-    system("chcp 65001");
-    List list;
-    if (!initList(&list)) {
-        printf("Init failed\n");
-        return -1;
-    }
-
-    printf("=== 1. 测试插入和自动扩容 ===\n");
-    // 初始容量是 10，我们要插入 15 个数，强制它扩容
-    for (int i = 0; i < 15; i++) {
-        insertList(&list, i * 10, list.size); // 尾插: 0, 10, 20...
-    }
-    printList(&list);
-    // 预期输出: Size: 15, Cap: 20 (或者更多), 内容 0 到 140
-
-    printf("\n=== 2. 测试指定位置插入 ===\n");
-    insertList(&list, 999, 0); // 头插
-    insertList(&list, 888, list.size); // 尾插
-    insertList(&list, 777, 5); // 中间插
-    printList(&list);
-
-    printf("\n=== 3. 测试查找 ===\n");
-    int index = findList(&list, 777);
-    if (index != -1) {
-        printf("Found 777 at index: %d\n", index);
-    } else {
-        printf("777 not found\n");
-    }
-
-    printf("\n=== 4. 测试删除 ===\n");
-    removeList(&list, 0); // 删除头部 (999)
-    printf("Removed head:\n");
-    printList(&list);
-
-    removeList(&list, list.size - 1); // 删除尾部 (888)
-    printf("Removed tail:\n");
-    printList(&list);
-
-    printf("\n=== 5. 测试越界保护 ===\n");
-    if (!removeList(&list, 100)) {
-        printf("Correctly blocked removing index 100\n");
-    }
-
-    // 清理内存
-    destroyList(&list);
-
-    return 0;
 }

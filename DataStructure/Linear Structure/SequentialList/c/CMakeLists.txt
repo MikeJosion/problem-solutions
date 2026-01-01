@@ -3,4 +3,6 @@ project(sequential C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(sequential SequentialLink.c)
+add_executable(sequential SequentialLink.c
+        main.c
+        SequentialLink.h)
