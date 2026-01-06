@@ -54,11 +54,7 @@ head = tail = node;
 
 <details><summary>3️⃣ 为什么每次新建节点都要 `next = NULL`？</summary>
 
-> 💡 **新节点的 `next` 必须显式设为 `NULL`，否则它可能指向一块“垃圾内存”,**
->
-> - `malloc` **只分配内存，不初始化**
-> > - `node->next` 里一开始是 **随机值**
-> 
+
 </details>
 
 
@@ -147,4 +143,7 @@ struct ListNode* addTwoNumbers(struct ListNode* l1, struct ListNode* l2) {
         return head;
 }
 ```
+
+
+
 
