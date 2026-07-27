@@ -25,7 +25,7 @@ jobs:
 
       - name: Sync BackendEngineering
         env:
-          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_TOKEN: ${{ secrets.NOTION__BACKEND_TOKEN }}
           NOTION_BACKEND_PAGE_ID: 3aa6e1d906898041a382c8dc38f87b05
           NOTION_BACKEND_OUTPUT_DIR: BackendEngineering
         run: python scripts/sync_notion_backend.py
