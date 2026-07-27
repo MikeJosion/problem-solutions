@@ -1,0 +1,39 @@
+name: Sync BackendEngineering from Notion
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 */12 * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Notion client
+        run: pip install notion-client
+
+      - name: Sync BackendEngineering
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_BACKEND_PAGE_ID: 3aa6e1d906898041a382c8dc38f87b05
+          NOTION_BACKEND_OUTPUT_DIR: BackendEngineering
+        run: python scripts/sync_notion_backend.py
+
+      - name: Commit synchronized notes
+        run: |
+          git config user.email "action@github.com"
+          git config user.name "GitHub Action"
+          git add BackendEngineering
+          git diff --cached --quiet || git commit -m "Sync BackendEngineering from Notion"
+          git push

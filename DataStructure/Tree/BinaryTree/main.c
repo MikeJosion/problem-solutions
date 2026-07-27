@@ -7,10 +7,7 @@ int main() {
     // 2. 提示输入
     // 我们用这个经典的例子：
     //       A
-    //      / \
-    //     B   C
-    //      \
-    //       D
+    /* Tree shape: A has children B and C; B has right child D. */
     // 前序输入序列应该是: A B # D # # C # #
     printf("请输入前序建树序列 (例如: A B # D # # C # #):\n");
     printf("注意：# 代表空节点，字母之间可以用空格隔开\n> ");

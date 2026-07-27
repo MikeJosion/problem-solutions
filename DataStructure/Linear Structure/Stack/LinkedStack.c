@@ -94,7 +94,7 @@ int main(void) {
     printStackLink(head); // 此时应该是空
 
     printf("尝试从空栈 Pop: ");
-    E val = popStackLink(head); // 应该触发报错
+    (void) popStackLink(head); // 应该触发报错
 
     return 0;
 }
