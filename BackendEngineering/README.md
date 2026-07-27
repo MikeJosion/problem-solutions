@@ -1,0 +1,18 @@
+# 后端
+
+## 目录
+
+---
+
+## 一次Web请求的完整请求—响应流程
+
+![](https://prod-files-secure.s3.us-west-2.amazonaws.com/c426e1d9-0689-813f-b6fb-0003a890664c/e07a5a4d-a509-40ba-a41e-372489b69a56/ChatGPT_Image_2026%E5%B9%B47%E6%9C%8827%E6%97%A5_15_35_37.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB466ZY5SNJTK%2F20260727%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260727T085056Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIBw1TW3BnLuGPAoSQi93ctE%2BjAeVcXXaI7rZaZ1xbycDAiEAyxa2v4bl9yhq69%2FlfTh%2FnUhpwJRQxW8HPAfZ2zjCJdYq%2FwMIShAAGgw2Mzc0MjMxODM4MDUiDMTcC12plKv08HxThCrcA2O94nhZ3OkuYrwS9xjcNZZzS3oeA1%2FsmbVAvaEqbeAA5FFsLNJGU9VVz54asuN36oJICFGIQeJ%2BhusoSc8LP9OeFQl2ojTF4h7zd3h7C99kIXIUcEdAyI2TRXlPMNWuqfmXz1ujNe5yhR4ls8fnh1SJyuDj%2F3KhMa5nAgA3foQbDhN%2FJoti9tLzV%2Bx0ole4TKAQGWPJjBkPsQnrfoAE8JLP%2F5N4WQGyRsO%2FkTyoHU%2Fai78OIL3CP8NDpsONB11j3hhA9frIjgPZoMT98OuluWG61pVCxX4iNH71TDi%2BUfxMRlFLkSkU%2B2rjMXs7Bk%2BjNBE8JnUZF51MKTU07hGDeFStAVGAf%2FF9GnF8DpD%2FIzC7FuaWJ6UV%2BUOYZx4pTbHbsQ1VbUahcmaQUfMpF1yKWj0X6w7batpZw5Yt%2BmMhIFBG2ccY4MMRmf4TCJkYrez56zu4hKLal%2BX4GsBZn%2Fcn4pu6nbPfrXSHqMHIyXtv0kWd78ECZ47sCiJMMIywAwPSCQvu3y7NwZZ513SFfdbi4m1imzdaMkcSW02%2FB4LYij%2Bh%2FgZURxYbjaQJNXAnlqZ13khBNVEpVD3fnztiWbqs2uLwPOVZALkOrKXFRvH3w%2BJCxsnOwaTGDbapRsiXMOe0nNMGOqUBaUVXe9Ck3bh0UrYP%2FQbn840a23B8xJ7LFdRjPNboEMIy7ReY0R%2B1NloTP2hvFYlnW3rdax12bJDPKuf2%2FvbuP7tBcYMan6d9SH6dxesatKGxbBvP73psWQiIJK38puyf0US55Yshh5wtBPBD%2Fy1aDtlFs72bOru6s4s6qNW%2BJf3%2BD23YsYx1E9I39R%2FXEi1O6e2qGkaZRI8ftmEP7EuC5RN5GJPh&X-Amz-Signature=1f3993651ac94971262e65f3621a19524b42eefe2cd94d83c9d218cc28ab285b&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject)
+
+1. 输入 URL / 发起请求
+1. DNS 解析（域名 → IP）
+1. 建立连接（TCP 三次握手 / TLS 握手）
+1. 发送 HTTP 请求（请求行 / 请求头 / 请求体）
+1. 服务端处理（路由 / 业务 / 数据库 / 缓存）
+1. 返回 HTTP 响应（状态码 / 响应头 / 响应体）
+1. 浏览器渲染（解析 / 布局 / 绘制）
+1. 连接复用与关闭（Keep-Alive / 四次挥手）
