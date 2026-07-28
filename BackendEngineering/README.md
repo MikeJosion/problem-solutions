@@ -6,7 +6,7 @@
 
 ## 一次 Web 请求的完整流程（请求 → 响应）
 
-![](https://prod-files-secure.s3.us-west-2.amazonaws.com/c426e1d9-0689-813f-b6fb-0003a890664c/e07a5a4d-a509-40ba-a41e-372489b69a56/ChatGPT_Image_2026%E5%B9%B47%E6%9C%8827%E6%97%A5_15_35_37.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB4665OZJKD7N%2F20260728%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260728T022657Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIHllRMk5V8stoRpl8BB95vHM1vuaf7hzZUt1FPc9r2WhAiAkzjoSPqyU%2BhX5HtJTWytNyUr81JY6bmTM4EZ8u1gvaCr%2FAwhYEAAaDDYzNzQyMzE4MzgwNSIM0ImLNA%2B%2Bpu2dQgXuKtwDNX7D3yPZxfCBsdNQdDCNn5ooHXAU6UTD%2BEwXk2sWkp9bMdxz5oqasa%2BUVaofrc3tYkE9j8rHFPhiCcuuna%2FtiHg8WxbuLsCpGb2aMIqxQIFRVF8xakET26proWawAiOIOMRwuTcdbqWAtESybVUtjd8lVeHGrIIW52hzFZ8DulA1pjSvyQdSK7CYRblAmfGMIZmtCXEsfCuoy%2BxKEyH7mFSKXnX2hGQymAK9bIzJxeo5WWfC6uPSd1r1HXUZCWgGd4xqe7p1mrV1IKiUW6%2BfQzutYpI5lkyjQwBRK7GP0FszXQBMeceWdOGhrWb2GFfbkajDihzodSQccPXIFao3b72YCY13M5lHr8Hpiqab5BU4Q7Xfb0iwF0OGsLc2b4%2BVTmYFLsianHKUPPkITX2Gyzgw5v5CU9yRnSZDrBE%2FryCsdihktGD%2BFDCA7XiRKem%2FAe6HdU0Jo7fPo2d%2FZmMEYQYLL0f2S3Lkms5ItPpXEXmdlW0v634ROl9NJ6eLK%2BYp7jb3pfx3EOaIUy8Awd5E4gP4qjdyWdZVDYRKvvVv4zhUQqG1NEHLSwGndS1w3gZ%2F7mwqJTby18lgXTtvmqlldHS%2Fho02ZKAJNvstcUHx0QyhvGseUpKnI5TWTrYwlMWf0wY6pgG%2BTxyS%2BLVLvxMBcmTVuNGpTit6QuDBaWtcL3yBMR5IePakzKBAZ9qUC4O4mFRYleaj58w4l4ugtywQPY1kLrpBmG8cUkFx5FpOghuMOFZDHEg5s0gCxyx2g3BMji%2F%2FRIcVrOuVLiP3ne3dyqrSXcHC3cjoCG%2BLwdEog86IXt5L%2FvegpMq0L4T%2FskhuNdgzkbD4hs535Rnp3lBF6MGJwCW5WK9xAIYN&X-Amz-Signature=1439f08cdb93d6e0d2d4c0e9c8d893db7013bf7a00b0267dcb2b82f68d71ee2f&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject)
+![](https://prod-files-secure.s3.us-west-2.amazonaws.com/c426e1d9-0689-813f-b6fb-0003a890664c/e07a5a4d-a509-40ba-a41e-372489b69a56/ChatGPT_Image_2026%E5%B9%B47%E6%9C%8827%E6%97%A5_15_35_37.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB46676JBE5PW%2F20260728%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260728T140340Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJ3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDMLSE2kV1Hn7B3G3lTX2QYaucrAvqTbsdK%2FYhr6VJFHwIhAKexwlYvDnNDdNpzg%2BI3W43egL29UoxcUl54ELlYrn3xKv8DCGYQABoMNjM3NDIzMTgzODA1IgzQ7er8ng2OoC%2BBVpoq3AMDyJH7X%2FTYMkMSX9o6oztxPwihfrl56kvk0aSDD2QadF4XidaJIBehfjeOSZdCx8LbPAwSoHPokSEITLQ7uTEeHVGANXpHxpvSGim5Sc7q0RjoUV3fw0fO%2F0oAuzLRXt8HHFBjXzIy9LwXphhrOxCDogn2FFcP%2FJENffNbOEwbZswSlnym%2FEfPYw803xEEFghFOSXOAaJsHxzaGjTQK79rJTtxTnWZayp5iiCHWmzJFZKbGz6YdI3SHPnw%2B1exKSK6NDmxQtxNpyFVfOgNfMUyS5cBdhhx4tC47NTwbVjH9yUSxlh7bEIH7zFBTfRm04tU6c1QzUPHzf2fgi806R4BIP3oT1fMhKMoXPzgaxJkkfL%2Fo0QwivRfSBn10Qk2bCV%2F0cbD8SG6bN8AiJZo%2B4eyBthyIreSss9hnkzZTSEszGHFHAzA9NVtZGblCOAdb%2FAjtpqwTBVG7T0oVj8igrWP%2FX%2BAYefM7KEpR3SIfac%2BF4meAyRnDpJ0cAvxrnGOnmE0lhhBNSe7Ff3aa0bUB2dk%2BEDUHEV2KzJqBmSL3v3TfK5LhR%2FFt1vCsqAmYO6l2%2Fd6%2FLz%2Fsx%2FAW6Tmx%2FujNH8TwlF4PNhF7RrgkdFGMF3lK%2Bc1AbVIx1ue6ngaADCU0aLTBjqkAdgEojpEuhiDZ8sY2CejYOkq4ItAZ5lVOEsaNg2aDHZPYZQZmYKkiCEjSYUyejlT0kL4iow8k4zEky4VteVIZRP0ejapL%2BS%2ByuCmyunfK11VgeSd3iQmwUmtIu4cw2QPB1Tgz75o5dHsD4UC4d71J07p3MRdle6dWVG19hIsZ2tfrsLBezlgKk2aB5NSQnZ3Iv4KzCUSHo9Vxn8ANoPK5jVdq%2FiG&X-Amz-Signature=6d16417770404047f9397332c420fba2d00cc0c106a32c065fe654a92ebc9c4a&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject)
 
 **请求—响应全流程（速记）**
 
@@ -28,7 +28,7 @@
 
 > - 响应（Response）= 状态行（HTTP 版本 + 状态码 + 状态描述） + 响应头 + 空行 + 响应体
 
-![](https://prod-files-secure.s3.us-west-2.amazonaws.com/c426e1d9-0689-813f-b6fb-0003a890664c/11d7c041-95cb-46f1-8e3c-68bb5e50855f/ChatGPT_Image_2026%E5%B9%B47%E6%9C%8828%E6%97%A5_00_11_34.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB4665OZJKD7N%2F20260728%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260728T022657Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIHllRMk5V8stoRpl8BB95vHM1vuaf7hzZUt1FPc9r2WhAiAkzjoSPqyU%2BhX5HtJTWytNyUr81JY6bmTM4EZ8u1gvaCr%2FAwhYEAAaDDYzNzQyMzE4MzgwNSIM0ImLNA%2B%2Bpu2dQgXuKtwDNX7D3yPZxfCBsdNQdDCNn5ooHXAU6UTD%2BEwXk2sWkp9bMdxz5oqasa%2BUVaofrc3tYkE9j8rHFPhiCcuuna%2FtiHg8WxbuLsCpGb2aMIqxQIFRVF8xakET26proWawAiOIOMRwuTcdbqWAtESybVUtjd8lVeHGrIIW52hzFZ8DulA1pjSvyQdSK7CYRblAmfGMIZmtCXEsfCuoy%2BxKEyH7mFSKXnX2hGQymAK9bIzJxeo5WWfC6uPSd1r1HXUZCWgGd4xqe7p1mrV1IKiUW6%2BfQzutYpI5lkyjQwBRK7GP0FszXQBMeceWdOGhrWb2GFfbkajDihzodSQccPXIFao3b72YCY13M5lHr8Hpiqab5BU4Q7Xfb0iwF0OGsLc2b4%2BVTmYFLsianHKUPPkITX2Gyzgw5v5CU9yRnSZDrBE%2FryCsdihktGD%2BFDCA7XiRKem%2FAe6HdU0Jo7fPo2d%2FZmMEYQYLL0f2S3Lkms5ItPpXEXmdlW0v634ROl9NJ6eLK%2BYp7jb3pfx3EOaIUy8Awd5E4gP4qjdyWdZVDYRKvvVv4zhUQqG1NEHLSwGndS1w3gZ%2F7mwqJTby18lgXTtvmqlldHS%2Fho02ZKAJNvstcUHx0QyhvGseUpKnI5TWTrYwlMWf0wY6pgG%2BTxyS%2BLVLvxMBcmTVuNGpTit6QuDBaWtcL3yBMR5IePakzKBAZ9qUC4O4mFRYleaj58w4l4ugtywQPY1kLrpBmG8cUkFx5FpOghuMOFZDHEg5s0gCxyx2g3BMji%2F%2FRIcVrOuVLiP3ne3dyqrSXcHC3cjoCG%2BLwdEog86IXt5L%2FvegpMq0L4T%2FskhuNdgzkbD4hs535Rnp3lBF6MGJwCW5WK9xAIYN&X-Amz-Signature=90656df80dd40ae8c089cccb47154cb644594f0e1abfa787fdaa216ea795e944&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject)
+![](https://prod-files-secure.s3.us-west-2.amazonaws.com/c426e1d9-0689-813f-b6fb-0003a890664c/11d7c041-95cb-46f1-8e3c-68bb5e50855f/ChatGPT_Image_2026%E5%B9%B47%E6%9C%8828%E6%97%A5_00_11_34.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB46676JBE5PW%2F20260728%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260728T140340Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJ3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDMLSE2kV1Hn7B3G3lTX2QYaucrAvqTbsdK%2FYhr6VJFHwIhAKexwlYvDnNDdNpzg%2BI3W43egL29UoxcUl54ELlYrn3xKv8DCGYQABoMNjM3NDIzMTgzODA1IgzQ7er8ng2OoC%2BBVpoq3AMDyJH7X%2FTYMkMSX9o6oztxPwihfrl56kvk0aSDD2QadF4XidaJIBehfjeOSZdCx8LbPAwSoHPokSEITLQ7uTEeHVGANXpHxpvSGim5Sc7q0RjoUV3fw0fO%2F0oAuzLRXt8HHFBjXzIy9LwXphhrOxCDogn2FFcP%2FJENffNbOEwbZswSlnym%2FEfPYw803xEEFghFOSXOAaJsHxzaGjTQK79rJTtxTnWZayp5iiCHWmzJFZKbGz6YdI3SHPnw%2B1exKSK6NDmxQtxNpyFVfOgNfMUyS5cBdhhx4tC47NTwbVjH9yUSxlh7bEIH7zFBTfRm04tU6c1QzUPHzf2fgi806R4BIP3oT1fMhKMoXPzgaxJkkfL%2Fo0QwivRfSBn10Qk2bCV%2F0cbD8SG6bN8AiJZo%2B4eyBthyIreSss9hnkzZTSEszGHFHAzA9NVtZGblCOAdb%2FAjtpqwTBVG7T0oVj8igrWP%2FX%2BAYefM7KEpR3SIfac%2BF4meAyRnDpJ0cAvxrnGOnmE0lhhBNSe7Ff3aa0bUB2dk%2BEDUHEV2KzJqBmSL3v3TfK5LhR%2FFt1vCsqAmYO6l2%2Fd6%2FLz%2Fsx%2FAW6Tmx%2FujNH8TwlF4PNhF7RrgkdFGMF3lK%2Bc1AbVIx1ue6ngaADCU0aLTBjqkAdgEojpEuhiDZ8sY2CejYOkq4ItAZ5lVOEsaNg2aDHZPYZQZmYKkiCEjSYUyejlT0kL4iow8k4zEky4VteVIZRP0ejapL%2BS%2ByuCmyunfK11VgeSd3iQmwUmtIu4cw2QPB1Tgz75o5dHsD4UC4d71J07p3MRdle6dWVG19hIsZ2tfrsLBezlgKk2aB5NSQnZ3Iv4KzCUSHo9Vxn8ANoPK5jVdq%2FiG&X-Amz-Signature=554b86627663c677d1f37d53b120785f4116e870e9bab107d844cfa407aef104&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject)
 
 ### 常用 HTTP 方法（怎么用）
 
@@ -72,4 +72,165 @@
 
 ### 常见状态码（看到就知道啥意思）
 
-![](https://prod-files-secure.s3.us-west-2.amazonaws.com/c426e1d9-0689-813f-b6fb-0003a890664c/9af3f8c9-f55e-4af8-9468-e3f2762e3fb3/ChatGPT_Image_2026%E5%B9%B47%E6%9C%8828%E6%97%A5_00_09_04.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB4665OZJKD7N%2F20260728%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260728T022657Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEI%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIHllRMk5V8stoRpl8BB95vHM1vuaf7hzZUt1FPc9r2WhAiAkzjoSPqyU%2BhX5HtJTWytNyUr81JY6bmTM4EZ8u1gvaCr%2FAwhYEAAaDDYzNzQyMzE4MzgwNSIM0ImLNA%2B%2Bpu2dQgXuKtwDNX7D3yPZxfCBsdNQdDCNn5ooHXAU6UTD%2BEwXk2sWkp9bMdxz5oqasa%2BUVaofrc3tYkE9j8rHFPhiCcuuna%2FtiHg8WxbuLsCpGb2aMIqxQIFRVF8xakET26proWawAiOIOMRwuTcdbqWAtESybVUtjd8lVeHGrIIW52hzFZ8DulA1pjSvyQdSK7CYRblAmfGMIZmtCXEsfCuoy%2BxKEyH7mFSKXnX2hGQymAK9bIzJxeo5WWfC6uPSd1r1HXUZCWgGd4xqe7p1mrV1IKiUW6%2BfQzutYpI5lkyjQwBRK7GP0FszXQBMeceWdOGhrWb2GFfbkajDihzodSQccPXIFao3b72YCY13M5lHr8Hpiqab5BU4Q7Xfb0iwF0OGsLc2b4%2BVTmYFLsianHKUPPkITX2Gyzgw5v5CU9yRnSZDrBE%2FryCsdihktGD%2BFDCA7XiRKem%2FAe6HdU0Jo7fPo2d%2FZmMEYQYLL0f2S3Lkms5ItPpXEXmdlW0v634ROl9NJ6eLK%2BYp7jb3pfx3EOaIUy8Awd5E4gP4qjdyWdZVDYRKvvVv4zhUQqG1NEHLSwGndS1w3gZ%2F7mwqJTby18lgXTtvmqlldHS%2Fho02ZKAJNvstcUHx0QyhvGseUpKnI5TWTrYwlMWf0wY6pgG%2BTxyS%2BLVLvxMBcmTVuNGpTit6QuDBaWtcL3yBMR5IePakzKBAZ9qUC4O4mFRYleaj58w4l4ugtywQPY1kLrpBmG8cUkFx5FpOghuMOFZDHEg5s0gCxyx2g3BMji%2F%2FRIcVrOuVLiP3ne3dyqrSXcHC3cjoCG%2BLwdEog86IXt5L%2FvegpMq0L4T%2FskhuNdgzkbD4hs535Rnp3lBF6MGJwCW5WK9xAIYN&X-Amz-Signature=123bdd21e8e11377a9a254f5e690adf5374e4b8d987f6212457d9273aef85f8d&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject)
+![](https://prod-files-secure.s3.us-west-2.amazonaws.com/c426e1d9-0689-813f-b6fb-0003a890664c/9af3f8c9-f55e-4af8-9468-e3f2762e3fb3/ChatGPT_Image_2026%E5%B9%B47%E6%9C%8828%E6%97%A5_00_09_04.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB46676JBE5PW%2F20260728%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260728T140341Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJ3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDMLSE2kV1Hn7B3G3lTX2QYaucrAvqTbsdK%2FYhr6VJFHwIhAKexwlYvDnNDdNpzg%2BI3W43egL29UoxcUl54ELlYrn3xKv8DCGYQABoMNjM3NDIzMTgzODA1IgzQ7er8ng2OoC%2BBVpoq3AMDyJH7X%2FTYMkMSX9o6oztxPwihfrl56kvk0aSDD2QadF4XidaJIBehfjeOSZdCx8LbPAwSoHPokSEITLQ7uTEeHVGANXpHxpvSGim5Sc7q0RjoUV3fw0fO%2F0oAuzLRXt8HHFBjXzIy9LwXphhrOxCDogn2FFcP%2FJENffNbOEwbZswSlnym%2FEfPYw803xEEFghFOSXOAaJsHxzaGjTQK79rJTtxTnWZayp5iiCHWmzJFZKbGz6YdI3SHPnw%2B1exKSK6NDmxQtxNpyFVfOgNfMUyS5cBdhhx4tC47NTwbVjH9yUSxlh7bEIH7zFBTfRm04tU6c1QzUPHzf2fgi806R4BIP3oT1fMhKMoXPzgaxJkkfL%2Fo0QwivRfSBn10Qk2bCV%2F0cbD8SG6bN8AiJZo%2B4eyBthyIreSss9hnkzZTSEszGHFHAzA9NVtZGblCOAdb%2FAjtpqwTBVG7T0oVj8igrWP%2FX%2BAYefM7KEpR3SIfac%2BF4meAyRnDpJ0cAvxrnGOnmE0lhhBNSe7Ff3aa0bUB2dk%2BEDUHEV2KzJqBmSL3v3TfK5LhR%2FFt1vCsqAmYO6l2%2Fd6%2FLz%2Fsx%2FAW6Tmx%2FujNH8TwlF4PNhF7RrgkdFGMF3lK%2Bc1AbVIx1ue6ngaADCU0aLTBjqkAdgEojpEuhiDZ8sY2CejYOkq4ItAZ5lVOEsaNg2aDHZPYZQZmYKkiCEjSYUyejlT0kL4iow8k4zEky4VteVIZRP0ejapL%2BS%2ByuCmyunfK11VgeSd3iQmwUmtIu4cw2QPB1Tgz75o5dHsD4UC4d71J07p3MRdle6dWVG19hIsZ2tfrsLBezlgKk2aB5NSQnZ3Iv4KzCUSHo9Vxn8ANoPK5jVdq%2FiG&X-Amz-Signature=7d6392de7c9af1e6ec7232da5a2d86bace991343b6bc9f8285d56e8db82e5479&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject)
+
+## HTTP 在 Gin 中的体现
+
+![](https://prod-files-secure.s3.us-west-2.amazonaws.com/c426e1d9-0689-813f-b6fb-0003a890664c/24d293b6-5e06-4a8d-b324-da3acb9f2ee4/ChatGPT_Image_2026%E5%B9%B47%E6%9C%8828%E6%97%A5_21_27_27.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB46676JBE5PW%2F20260728%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260728T140341Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJ3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDMLSE2kV1Hn7B3G3lTX2QYaucrAvqTbsdK%2FYhr6VJFHwIhAKexwlYvDnNDdNpzg%2BI3W43egL29UoxcUl54ELlYrn3xKv8DCGYQABoMNjM3NDIzMTgzODA1IgzQ7er8ng2OoC%2BBVpoq3AMDyJH7X%2FTYMkMSX9o6oztxPwihfrl56kvk0aSDD2QadF4XidaJIBehfjeOSZdCx8LbPAwSoHPokSEITLQ7uTEeHVGANXpHxpvSGim5Sc7q0RjoUV3fw0fO%2F0oAuzLRXt8HHFBjXzIy9LwXphhrOxCDogn2FFcP%2FJENffNbOEwbZswSlnym%2FEfPYw803xEEFghFOSXOAaJsHxzaGjTQK79rJTtxTnWZayp5iiCHWmzJFZKbGz6YdI3SHPnw%2B1exKSK6NDmxQtxNpyFVfOgNfMUyS5cBdhhx4tC47NTwbVjH9yUSxlh7bEIH7zFBTfRm04tU6c1QzUPHzf2fgi806R4BIP3oT1fMhKMoXPzgaxJkkfL%2Fo0QwivRfSBn10Qk2bCV%2F0cbD8SG6bN8AiJZo%2B4eyBthyIreSss9hnkzZTSEszGHFHAzA9NVtZGblCOAdb%2FAjtpqwTBVG7T0oVj8igrWP%2FX%2BAYefM7KEpR3SIfac%2BF4meAyRnDpJ0cAvxrnGOnmE0lhhBNSe7Ff3aa0bUB2dk%2BEDUHEV2KzJqBmSL3v3TfK5LhR%2FFt1vCsqAmYO6l2%2Fd6%2FLz%2Fsx%2FAW6Tmx%2FujNH8TwlF4PNhF7RrgkdFGMF3lK%2Bc1AbVIx1ue6ngaADCU0aLTBjqkAdgEojpEuhiDZ8sY2CejYOkq4ItAZ5lVOEsaNg2aDHZPYZQZmYKkiCEjSYUyejlT0kL4iow8k4zEky4VteVIZRP0ejapL%2BS%2ByuCmyunfK11VgeSd3iQmwUmtIu4cw2QPB1Tgz75o5dHsD4UC4d71J07p3MRdle6dWVG19hIsZ2tfrsLBezlgKk2aB5NSQnZ3Iv4KzCUSHo9Vxn8ANoPK5jVdq%2FiG&X-Amz-Signature=42dc700edb7373704da9452b1bf84981241337f0ecede36520307a3e937cfe0e&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject)
+
+**客户端数据来源（4 类）**
+
+- URL 路径参数（Path Param）
+- 查询参数（Query Param）
+- 请求头（Header）
+- 请求体（Body）
+Gin 通过对应 API 读取这些数据，并常用 `c.JSON()` 返回 JSON 响应。
+
+---
+
+**1）路径参数（Path Param）：****`c.Param()`**  
+
+路径中的动态值（例如 `:id`）：
+
+```plain text
+GET /users/15
+```
+
+```go
+r.GET("/users/:id", getUser)
+
+id := c.Param("id") // string
+```
+
+---
+
+**2）查询参数（Query Param）：****`c.Query()`**  
+
+位于 URL 的 `?` 后面：
+
+```plain text
+GET /users?keyword=nova
+```
+
+```go
+keyword := c.Query("keyword")
+```
+
+注意区分：
+
+```plain text
+c.Query()  → 读取 URL 参数
+DB.Query() → 查询数据库
+```
+
+---
+
+**3）JSON 请求体（Body）：****`c.ShouldBindJSON()`**
+
+客户端发送（JSON）：
+
+```json
+{
+  "name": "Nova",
+  "age": 20
+}
+```
+
+Gin 解析到结构体：
+
+```go
+var req CreateUserRequest
+
+if err := c.ShouldBindJSON(&req); err != nil {
+    return
+}
+```
+
+作用（一句话）：
+
+```plain text
+读取请求体 → 解析 JSON → 写入结构体
+```
+
+---
+
+**4）请求头（Header）：****`c.GetHeader()`**
+
+请求头是客户端携带的附加信息（数据格式、身份凭证、请求来源等）：
+
+```go
+value := c.GetHeader("Header-Name")
+```
+
+常见 Header：
+
+- **Content-Type**：说明「请求体」的格式
+```plain text
+Content-Type: application/json
+```
+
+
+- **Authorization**：携带身份认证信息
+```plain text
+Authorization: Bearer token123
+```
+
+拆开理解：
+
+```plain text
+Authorization → 请求头名称
+Bearer        → 认证方式
+token123      → Token
+```
+
+Gin 获取完整内容：
+
+```go
+authHeader := c.GetHeader("Authorization")
+// "Bearer token123"
+```
+
+JWT 通常通过这个请求头发送给后端。
+
+
+- **Accept**：说明客户端希望服务器返回什么格式
+```plain text
+Accept: application/json
+```
+
+```plain text
+Content-Type → 我发送的数据格式
+Accept       → 我希望收到的数据格式
+```
+
+
+- **Origin**：说明请求来自哪个网站，常用于跨域判断  
+- **User-Agent**：说明请求来自浏览器、Postman、手机应用等哪种客户端
+---
+
+**返回响应：****`c.JSON()`**
+
+```go
+c.JSON(http.StatusOK, gin.H{
+    "message": "success",
+    "data":    user,
+})
+```
+
+作用：
+
+```plain text
+设置状态码 → 转换为 JSON → 写入响应体
+```
+
+---
+
+**最终速记**
+
+```plain text
+路径中的值   → c.Param()
+问号后的值   → c.Query()
+请求头信息   → c.GetHeader()
+JSON 请求体  → c.ShouldBindJSON()
+返回 JSON    → c.JSON()
+```
